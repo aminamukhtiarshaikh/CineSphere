@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!-- <html lang="en" data-bs-theme="dark"> -->
+  <html lang="en"></html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineSphere — Cinema Network Analytics</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="marquee">
+    <div class="film-strip"></div>
+    <div class="container py-4">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          <div class="eyebrow">Cinema Network · Management &amp; Analytics</div>
+          <h1 class="brand">CINE<span>SPHERE</span></h1>
+          <p class="tagline mb-0">Live operations dashboard across every screen, every city.</p>
+        </div>
+        <div class="status-box">
+          <span id="apiDot" class="dot dot-wait"></span>
+          <span id="apiStatus">Connecting to API…</span>
+          <div class="api-url" id="apiUrl"></div>
+        </div>
+      </div>
+    </div>
+    <div class="film-strip"></div>
+  </header>
+
+  <main class="container my-4">
+
+    <section id="kpiRow" class="row g-3 mb-4"></section>
+
+    <h2 class="section-title">Data explorer &amp; records</h2>
+    <section class="row g-3 mb-4">
+      <div class="col-12 col-lg-8">
+        <div class="panel h-100">
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <label class="form-label mb-0 me-1">Table</label>
+            <select id="resourceSelect" class="form-select form-select-sm" style="max-width:240px"></select>
+            <span class="count-badge">Rows: <strong id="rowCount">—</strong></span>
+            <button id="refreshBtn" class="btn btn-sm btn-outline-gold ms-auto">Refresh</button>
+          </div>
+          <div class="table-scroll">
+            <table class="table table-sm table-dark align-middle mb-0" id="dataTable">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="panel h-100">
+          <h3 class="panel-title" id="formTitle">Add record</h3>
+          <p class="form-hint">Form fields are generated from the selected table. The id (SERIAL) is auto-generated.</p>
+          <form id="recordForm">
+            <div id="formFields" class="vstack gap-2"></div>
+            <input type="hidden" id="editId" value="" />
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn btn-gold flex-grow-1" id="saveBtn">Save record</button>
+              <button type="button" class="btn btn-outline-secondary" id="resetBtn">Reset</button>
+            </div>
+          </form>
+          <div id="formMsg" class="form-msg mt-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Analytics</h2>
+    <section class="row g-3 mb-4">
+      <div class="col-12 col-lg-7">
+        <div class="panel h-100">
+          <h3 class="panel-title">Revenue by cinema</h3>
+          <div class="chart-wrap"><canvas id="chartRevenueCinema"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="panel h-100">
+          <h3 class="panel-title">Tickets by genre</h3>
+          <div class="chart-wrap"><canvas id="chartGenre"></canvas></div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="panel h-100">
+          <h3 class="panel-title">Top movies (tickets sold)</h3>
+          <div class="chart-wrap"><canvas id="chartTopMovies"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="panel h-100">
+          <h3 class="panel-title">Bookings trend</h3>
+          <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="panel h-100">
+          <h3 class="panel-title">Revenue by seat class</h3>
+          <div class="chart-wrap"><canvas id="chartSeatClass"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="panel h-100">
+          <h3 class="panel-title">Payment methods</h3>
+          <div class="chart-wrap"><canvas id="chartPayments"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="panel h-100">
+          <h3 class="panel-title">Membership tiers</h3>
+          <div class="chart-wrap"><canvas id="chartMembership"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="panel h-100">
+          <h3 class="panel-title">Top concessions</h3>
+          <div class="chart-wrap"><canvas id="chartConcessions"></canvas></div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-7">
+        <div class="panel h-100">
+          <h3 class="panel-title">Peak hours (tickets by show time)</h3>
+          <div class="chart-wrap"><canvas id="chartPeak"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="panel h-100">
+          <h3 class="panel-title">Screen occupancy %</h3>
+          <div class="chart-wrap"><canvas id="chartOccupancy"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <footer class="text-center py-4 footer-note">
+      CineSphere · Node.js + Express + PostgreSQL (Neon) · Bootstrap + Chart.js
+    </footer>
+  </main> -->
+
+  <script src="script.js"></script>
+</body>
+</html>

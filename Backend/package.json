@@ -1,0 +1,19 @@
+{
+  "name": "cinesphere-api",
+  "version": "1.0.0",
+  "description": "REST API for CineSphere - Cinema Multiplex Network Management & Analytics",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": ["cinema", "dbms", "express", "postgresql", "neon", "analytics"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  }
+}
